@@ -1,0 +1,109 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-7">
+            <p class="heading">Add Products</p>
+            <hr>
+            <form [formGroup]="productGroup">
+                <div class="form-group">
+                    <label for="product">Product Name</label>
+                    <input formControlName="Product_Name" #productNameInput type="text" class="form-control" id="product">
+                </div>
+                <div class="form-group">
+                    <label for="price">Price</label>
+                    <input formControlName="price" type="text" class="form-control" id="price">
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Quantity</label>
+                    <input formControlName="quantity" type="number" class="form-control" id="quantity" (input)="AddRate()">
+                </div>
+                <div class="form-group">
+                    <label for="amount">Amount</label>
+                    <input formControlName="amount" type="text" class="form-control" id="amount" >
+                </div>
+                <div class="form-group" style="position: relative;">
+                <button type="submit" class="btn btn-sm btn-success" (click)="Add()">Add</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-md-5" style="margin-top: 20px;">
+            <p class="heading">Summary</p>
+            <div class="form-group">
+                <label for="total">Total</label>
+                <input type="text" readonly class="form-control" id="total" value="{{ this.existAmount }}">
+            </div>
+            <div id="btnDiv" style="margin-top: 10px;">
+                <button class="btn btn-success" style="width: 100%;" (click)="CompleteProcess()">Complete</button>
+            </div>
+            <div id="btnDiv" style="margin-top: 10px;">
+                <button class="btn btn-success" (click)="viewStock()">View Stock</button>
+                </div>
+        </div>
+
+        <div class="col-md-7 " style="margin-top: 30px;">
+            <p class="heading">Products</p>
+            <table class="table table-wrapper">
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let product of productArray">
+                        <td>{{product.Product_Name.toUpperCase()}}</td>
+                        <td>{{product.price}}</td>
+                        <td>{{product.quantity}}</td>
+                        <td>{{product.amount}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-5" >
+            <div>
+                <nav class="navbar navbar-light bg-light">
+                    <div class="container-fluid">
+                      <form class="d-flex"> 
+                        <input class="form-control me-2" type="text" id="searchItem"  (input)="search()" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success" type="button" (click)="generatePDF()"><i class="fa fa-file-text" aria-hidden="true"></i></button>
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                   
+                      </form>
+                    </div>
+                  </nav>
+                
+                <table id="example" class="display" style="width:100% ; margin-top: 10px;">
+                    <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let product of  this.staff">
+                            <td>{{product.product_Name}}</td>
+                            <td>{{product.price}}</td>
+                            <td>{{product.quantity}}</td>
+                            <td>{{product.amount}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div style="position: absolute;
+               
+                right: 146px;">
+                    <button (click)="previousPage()" class="btn btn-primary" [disabled]="currentPage === 1">Previous</button> &nbsp;
+                    <button (click)="nextPage()" class="btn btn-primary"    [disabled]="currentPage === totalPages">Next</button>
+                </div>
+              
+            </div>
+          
+        </div>
+    </div>
+
+ 
+</div>
