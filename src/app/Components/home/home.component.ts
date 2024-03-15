@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import * as pdfmake from 'pdfmake/build/pdfmake';
 
 
+import jsPDF from 'jspdf'; // Note the default import
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -151,66 +152,63 @@ nextPage() {
     this.fetchStaffData();
   }
 }
+data = [
+  { name: 'John Doe', age: 30, city: 'New York' },
+  { name: 'Jane Smith', age: 25, city: 'Los Angeles' },
+  // Add more objects as needed
+];
+
 generatePDF() {
-  this.createPDF() 
+  const doc = new jsPDF();
+
+  // Add heading
+  doc.setFontSize(16);
+  doc.setTextColor(255, 0, 0); // Red color
+  doc.text('Lokesh PDF Report', 10, 10);
+
+  // Add table header
+  doc.setFontSize(12);
+  doc.setTextColor(0); // Black color
+  let y = 20; // Start position for the table header
+  doc.text('product_Name', 10, y);
+  doc.text('price', 60, y);
+  doc.text('quantity', 100, y);
+  doc.text('amount', 140, y);
+
+  // Draw border for table header
+  doc.rect(10, y - 5, 50, 10, 'S'); // product_Name
+  doc.rect(60, y - 5, 30, 10, 'S'); // price
+  doc.rect(100, y - 5, 30, 10, 'S'); // quantity
+  doc.rect(140, y - 5, 30, 10, 'S'); // amount
+
+  // Add table rows
+  y += 10; // Move down for the content
+  this.staff.forEach((item: any) => {
+    doc.text(item.product_Name, 10, y);
+    doc.text(String(item.price), 60, y);
+    doc.text(String(item.quantity), 100, y);
+    doc.text(String(item.amount), 140, y);
+
+    // Draw border for table rows
+    doc.rect(10, y - 5, 50, 10, 'S'); // product_Name
+    doc.rect(60, y - 5, 30, 10, 'S'); // price
+    doc.rect(100, y - 5, 30, 10, 'S'); // quantity
+    doc.rect(140, y - 5, 30, 10, 'S'); // amount
+
+    y += 10; // Move to the next row
+  });
+
+  // Save the document
+  doc.save('document.pdf');
+}
+
+
 }
 
 
 
 
-// createPDF() {
-//   debugger
 
-//   const documentDefinition = {
-//     content: [
-//       { text: 'Report', style: 'header' },
-//       '\n',
-//       {
-//         table: {
-//           headers: ['product_Name', 'price','quantity','amount'],
-//           body: this.reportData.map((item:any) => [item.column1, item.column2,item.column3,item.column4])
-//         }
-//       }
-//     ],
-//     styles: {
-//       header: {
-//         fontSize: 18,
-//         bold: true
-//       }
-//     }
-//   };
 
-//    pdfFonts.pdfMake = pdfMake; // Correcting assignment to pdfMake
 
-//   const customVfs = {
-//     Roboto: {
-//       normal: 'Roboto-Medium.ttf'
-//     }
-//   };
 
-//   pdfMake.createPdf(documentDefinition, {}, customVfs).download('report.pdf'); // Correcting customVfs format
-// }
-createPDF() {
-  const documentDefinition = {
-    content: [
-      { text: 'Report', style: 'header' },
-      '\n',
-      {
-        table: {
-          headers: ['Product Name', 'Price', 'Quantity', 'Amount'],
-          body: this.reportData.map((item: any) => [item.product_Name, item.price, item.quantity, item.amount])
-        }
-      }
-    ],
-    styles: {
-      header: {
-        fontSize: 18,
-        bold: true
-      }
-    }
-  };
-
-  pdfmake.createPdf(documentDefinition).download('report.pdf');
-}
-
-}
