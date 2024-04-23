@@ -80,3 +80,48 @@ button[type="submit"]{
 .btn-primary{
   cursor: pointer;
 }
+tbody{
+  border-color: inherit !important;
+  border-style: solid !important;
+}
+td{
+  border: 0.7px solid gray;
+}
+
+
+/* Pagination Button Styles */
+.pagination-button {
+  background-color: #198754; /* Green background */
+  border: none;
+  color: white;
+  padding: 5px 9px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.3s ease; /* Add transition for smooth color change */
+}
+
+.pagination-button:hover {
+  background-color: #45a049; /* Darker green on hover */
+}
+
+/* Pagination Animation */
+@keyframes pulse {
+  0% {
+      transform: scale(1);
+  }
+  50% {
+      transform: scale(1.1);
+  }
+  100% {
+      transform: scale(1);
+  }
+}
+
+.pagination-button.animated {
+  animation: pulse 1s infinite; /* Apply the pulse animation to the button */
+}

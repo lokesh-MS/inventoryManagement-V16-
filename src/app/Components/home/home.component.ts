@@ -23,34 +23,31 @@ export class HomeComponent implements OnInit {
       quantity: [''],
       amount: ['']
     });
-    // (pdfMake as any).fonts = {
-    //   Roboto: {
-    //     normal: 'assets/fonts/Roboto-Regular.ttf',
-    //     bold: 'assets/fonts/Roboto-Medium.ttf',
-    //     italics: 'assets/fonts/Roboto-Italic.ttf',
-    //     bolditalics: 'assets/fonts/Roboto-MediumItalic.ttf'
-    //   }
-    // };
-
     (pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
+    this.fetchStaffData();
   }
 
   existAmount: number = 0;
   currentAmount: number = 0;
 
   Add() {
-    this.productGroup.value.Product_Name.toLowerCase();
+    let productName = this.productGroup.value.Product_Name.toLowerCase();
     let quantityString = this.productGroup.value.quantity.toString();
     this.productGroup.value.quantity = quantityString;
     let amountString = this.productGroup.value.amount.toString();
     this.productGroup.value.amount = amountString;
-    this.productArray.push(this.productGroup.value);
-    this.InsertProduct();
-    this.existAmount = this.existAmount + this.currentAmount;
-    this.productGroup.reset();
-    let productInputEle = document.getElementById("product") as HTMLInputElement;
-    if (productInputEle) {
-      productInputEle.focus();
+    if (productName !== '' && productName !== null) {
+      this.productArray.push(this.productGroup.value);
+      this.InsertProduct();
+      this.existAmount = this.existAmount + this.currentAmount;
+      this.productGroup.reset();
+      let productInputEle = document.getElementById("product") as HTMLInputElement;
+      if (productInputEle) {
+        productInputEle.focus();
+      }
+    }
+    else {
+      alert('Enter product!')
     }
   }
 
@@ -81,26 +78,31 @@ export class HomeComponent implements OnInit {
     this.productGroup.reset();
   }
 
-  viewStock() {
-    this.fetchStaffData();
-  }
-
   staff: any = [];
   displayedStaff: any[] = [];
   currentPage: number = 1;
-  totalPages: number = 1;
+  totalPages: number[] = [1]; // Initialize totalPages as an array with one element
   itemsPerPage: number = 10;
-  searchQuery: string = '';
-  reportData: any;
+  searchQuery: any = '';
+  searchNotFountStr: string = '';
 
   fetchStaffData() {
     const apiUrl = `https://localhost:7153/api/Product/Paged?page=${this.currentPage}&pageSize=${this.itemsPerPage}`;
     this.http.get(apiUrl).subscribe({
       next: (res: any) => {
-        console.log(res);
         this.staff = res.products;
-        this.reportData = res.products;
-        this.totalPages = res.totalPages;
+        this.staff.sort((a: any, b: any) => {
+          // Implement sorting logic based on your requirements
+          // For example, let's sort by product name alphabetically
+          if (a.product_Name < b.product_Name) {
+            return -1;
+          } else if (a.product_Name > b.product_Name) {
+            return 1;
+          } else {
+            return 0;
+          }
+        });
+        this.totalPages = Array.from({ length: res.totalPages }, (_, i) => i + 1); // Initialize totalPages as an array of numbers from 1 to totalPages
         if (this.staff) {
           this.updateDisplayedStaff();
         }
@@ -112,19 +114,37 @@ export class HomeComponent implements OnInit {
   }
 
   updateDisplayedStaff() {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
-    this.displayedStaff = this.staff.slice(startIndex, endIndex);
+    this.displayedStaff = this.staff;
   }
 
   search() {
-    let searchQuery = document.getElementById("searchItem") as HTMLInputElement;
-    if (searchQuery) {
-      this.displayedStaff = this.staff.filter((staff: any) => staff.product_Name.toLowerCase().includes(searchQuery.value.toLowerCase()));
-      this.staff = this.displayedStaff;
+    this.searchQuery = document.getElementById("searchItem") as HTMLInputElement;
+
+    if (this.searchQuery.value !== '') {
+      this.http.get(`https://localhost:7153/api/Product/Search/${this.searchQuery.value}`).subscribe({
+        next: (res: any) => {
+          console.log(res);
+          if (res != null && res != undefined) {
+            this.searchNotFountStr = '';
+            this.staff = res;
+            this.updateDisplayedStaff();
+          }
+        },
+        error: (error) => {
+          if (error.status === 404) {
+            this.staff = [];
+            console.log("No products found matching the search criteria!!!");
+            this.searchNotFountStr = "No products found matching the search criteria!!!";
+            // Handle not found error, display appropriate message to the user
+          } else {
+            console.error("An error occurred:", error);
+            // Handle other errors
+          }
+        }
+      });
+    } else {
+      this.fetchStaffData();
     }
-    this.currentPage = 1;
-    this.updateDisplayedStaff();
   }
 
   previousPage() {
@@ -135,7 +155,7 @@ export class HomeComponent implements OnInit {
   }
 
   nextPage() {
-    if (this.currentPage < this.totalPages) {
+    if (this.currentPage < this.totalPages.length) {
       this.currentPage++;
       this.fetchStaffData();
     }
@@ -179,5 +199,13 @@ export class HomeComponent implements OnInit {
   getTotalAmount(): number {
     // Ensure that each item's amount is parsed as a number before adding
     return this.productArray.reduce((total, item) => total + parseFloat(item.amount), 0);
+  }
+  
+  viewStock() {
+    this.fetchStaffData();
+  }
+  
+  navigateToPage(page: number) {
+    // Define the logic to navigate to a specific page
   }
 }
