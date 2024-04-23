@@ -6,7 +6,8 @@
             <form [formGroup]="productGroup">
                 <div class="form-group">
                     <label for="product">Product Name</label>
-                    <input formControlName="Product_Name" #productNameInput type="text" class="form-control" id="product">
+                    <input formControlName="Product_Name" #productNameInput type="text" class="form-control"
+                        id="product">
                 </div>
                 <div class="form-group">
                     <label for="price">Price</label>
@@ -14,14 +15,15 @@
                 </div>
                 <div class="form-group">
                     <label for="quantity">Quantity</label>
-                    <input formControlName="quantity" type="number" class="form-control" id="quantity" (input)="AddRate()">
+                    <input formControlName="quantity" type="number" class="form-control" id="quantity"
+                        (input)="AddRate()">
                 </div>
                 <div class="form-group">
                     <label for="amount">Amount</label>
-                    <input formControlName="amount" type="text" class="form-control" id="amount" >
+                    <input formControlName="amount" type="text" class="form-control" id="amount">
                 </div>
                 <div class="form-group" style="position: relative;">
-                <button type="submit" class="btn btn-sm btn-success" (click)="Add()">Add</button>
+                    <button type="submit" class="btn btn-sm btn-success" (click)="Add()">Add</button>
                 </div>
             </form>
         </div>
@@ -37,7 +39,7 @@
             </div>
             <div id="btnDiv" style="margin-top: 10px;">
                 <button class="btn btn-success" (click)="viewStock()">View Stock</button>
-                </div>
+            </div>
         </div>
 
         <div class="col-md-7 " style="margin-top: 30px;">
@@ -51,30 +53,35 @@
                         <th>Amount</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody >
                     <tr *ngFor="let product of productArray">
                         <td>{{product.Product_Name.toUpperCase()}}</td>
                         <td>{{product.price}}</td>
                         <td>{{product.quantity}}</td>
                         <td>{{product.amount}}</td>
+
                     </tr>
+                    <tr style="position: relative;"> <button style="position: absolute; right: 10PX;top: 10PX;" class="btn btn-outline-success" type="button" (click)="generatePDF()" >
+                        View Invoice <i class="fa fa-file-text" aria-hidden="true"></i></button></tr>
+
                 </tbody>
             </table>
         </div>
 
-        <div class="col-md-5" >
+        <div class="col-md-5">
             <div>
                 <nav class="navbar navbar-light bg-light">
                     <div class="container-fluid">
-                      <form class="d-flex"> 
-                        <input class="form-control me-2" type="text" id="searchItem"  (input)="search()" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success" type="button" (click)="generatePDF()"><i class="fa fa-file-text" aria-hidden="true"></i></button>
-                        <button class="btn btn-outline-success" type="submit">Search</button>
-                   
-                      </form>
+                        <form class="d-flex">
+                            <input class="form-control me-2" type="text" id="searchItem" (input)="search()"
+                                placeholder="Search" aria-label="Search">
+
+                            <button class="btn btn-outline-success" type="submit">Search</button>
+
+                        </form>
                     </div>
-                  </nav>
-                
+                </nav>
+
                 <table id="example" class="display" style="width:100% ; margin-top: 10px;">
                     <thead>
                         <tr>
@@ -96,14 +103,16 @@
                 <div style="position: absolute;
                
                 right: 146px;">
-                    <button (click)="previousPage()" class="btn btn-primary" [disabled]="currentPage === 1">Previous</button> &nbsp;
-                    <button (click)="nextPage()" class="btn btn-primary"    [disabled]="currentPage === totalPages">Next</button>
+                    <button (click)="previousPage()" class="btn btn-primary"
+                        [disabled]="currentPage === 1">Previous</button> &nbsp;
+                    <button (click)="nextPage()" class="btn btn-primary"
+                        [disabled]="currentPage === totalPages">Next</button>
                 </div>
-              
+
             </div>
-          
+
         </div>
     </div>
 
- 
+
 </div>

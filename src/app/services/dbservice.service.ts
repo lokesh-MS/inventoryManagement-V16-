@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 })
 export class DbserviceService {
 mainUrl:string ="https://localhost:7153/api/";
-publishUrl:string="http://localhost:63/api/Product";
+publishUrl:string="https://localhost:7153/api/";
   constructor(private http:HttpClient) { }
 
   $getAllProducts(){
